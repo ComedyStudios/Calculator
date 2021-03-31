@@ -4,9 +4,12 @@ namespace ConsoleApp1
 {
     class Program
     {
-        static void Main(string[] args)
+        private static string JsonPath = "../../resources/InputOutput.json";
+        private static JsonInputOutput JsonInputOutputManager = new JsonInputOutput();
+        static void Main()
         {
-            Console.WriteLine("Hello World!"); 
+            Calculator calc = new Calculator();
+            calc.Calculate(JsonInputOutputManager.ReadJson(JsonPath));
         }
     }
 }
