@@ -1,74 +1,100 @@
-﻿using System; 
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 
 namespace ConsoleApp1
 {
     public class Parser
-    {
+    { 
+        //TODO: Check for valid syntax
+        
         private string[] NumberCharArray = {"0","1","2","3","4","5","6","7","8","9","."}; 
         private string[] OpperatorNameArray = {"+","-","*","/"};
-        private Calculator calc  = new Calculator();
-        private int i = 0; 
+        private List<string> OpperatorsAndNumbersList = new List<string>(); 
         
-        public void Parse(string expresion)
+        private Calculator calc  = new Calculator();
+        
+        private int expressionLenght;
+        private string substring; 
+        private int PositionInString = 0;
+        public List<string> Parse(string expresion)
         {
+            expressionLenght = expresion.Length; 
             
-            for (; i < expresion.Length; i++)
+            for (; PositionInString < expressionLenght; PositionInString++)
             {
                 
-                string substring = expresion.Substring(i, 1);
+                substring = expresion.Substring(PositionInString, 1);
                 
                 if (substring == "(")
                 {
-                    EvaluateString(expresion, i);
+                    SearchForBrackets(expresion, PositionInString);
                 }
                 
-                foreach (var numberChar in NumberCharArray)
+                searchForNumbers(expresion);
+                
+                GetOpperator(substring);
+            }
+
+            return OpperatorsAndNumbersList; 
+        }
+
+        private void searchForNumbers(string expresion)
+        {
+            foreach (var numberChar in NumberCharArray)
+            {
+                if (numberChar == substring)
                 {
-                    if (numberChar == substring)
+                    PositionInString++;
+                    string temp = substring;
+                    for (; PositionInString < expressionLenght; PositionInString++)
                     {
-                        i++; 
-                        string temp = substring;
-                        for (; i < expresion.Length; i++)
+                        substring = expresion.Substring(PositionInString, 1);
+                        foreach (var secondNumberChar in NumberCharArray)
                         {
-                            substring = expresion.Substring(i, 1);
-                            foreach (var secondNumberChar in NumberCharArray)
+                            if (substring == secondNumberChar)
                             {
-                                if (substring == secondNumberChar)
-                                {
-                                    temp += substring;
-                                    break;
-                                }
-                            }
-                            if (CharIsNotNumber(substring))
-                            {
-                                break; 
+                                temp += substring;
+                                break;
                             }
                         }
-                        
-                        //Do something with the gotten number 
-                        Console.WriteLine(temp);
-                        break;
+
+                        if (CharIsNotNumber(substring))
+                        {
+                            break;
+                        }
                     }
+
+                    OpperatorsAndNumbersList.Add(temp);
+                    break;
                 }
-                GetOpperator(substring);
             }
         }
 
-        private void EvaluateString(string expresion, int entryPoint)
+        private void SearchForBrackets(string expresion, int entryPoint)
         {
+            int openingBracketCount = 0; 
             var z = entryPoint;
             for (; z < expresion.Length; z++)
             {
                 var tempSubstring = expresion.Substring(z, 1);
                 if (tempSubstring == ")")
                 {
-                    string bracketSubstring = expresion.Substring(entryPoint + 1, z - entryPoint - 1);
+                    openingBracketCount--;
+                   
+                }
+                else if(tempSubstring == "(")
+                {
+                    openingBracketCount++;
+                }
+
+                if (openingBracketCount == 0)
+                {
+                    string bracketSubstring = expresion.Substring(entryPoint + 1, z - entryPoint - 2);
 
                     // TODO calculate the bracketSubstring (it should return a value that can be used later)
-                    Console.WriteLine("(");
                     calc.Calculate(bracketSubstring);
-                    Console.WriteLine(")");
-                    i = z; 
+                    PositionInString = z; 
                     break;
                 }
             }
@@ -81,7 +107,7 @@ namespace ConsoleApp1
             {
                 if (substring == mathOperator)
                 {
-                    Console.WriteLine(mathOperator);
+                    OpperatorsAndNumbersList.Add(substring);
                     break;
                 }
             }
