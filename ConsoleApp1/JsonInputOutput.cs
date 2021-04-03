@@ -17,5 +17,11 @@ namespace ConsoleApp1
             }
             return InputString; 
         }
+
+        internal void WriteJson(string path, string value)
+        {
+            File.WriteAllText(path, JsonConvert.SerializeObject(value));
+            
+        }
     }
 }

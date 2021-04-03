@@ -6,7 +6,6 @@ namespace ConsoleApp1
 {
     public class Parser
     { 
-        //TODO: Check for valid syntax
         
         private string[] NumberCharArray = {"0","1","2","3","4","5","6","7","8","9","."}; 
         private string[] OpperatorNameArray = {"+","-","*","/"};
@@ -28,7 +27,7 @@ namespace ConsoleApp1
                 
                 if (substring == "(")
                 {
-                    SearchForBrackets(expresion, PositionInString);
+                    SearchAndCalculateBrackets(expresion, PositionInString);
                 }
                 
                 searchForNumbers(expresion);
@@ -71,7 +70,7 @@ namespace ConsoleApp1
             }
         }
 
-        private void SearchForBrackets(string expresion, int entryPoint)
+        private void SearchAndCalculateBrackets(string expresion, int entryPoint)
         {
             int openingBracketCount = 0; 
             var z = entryPoint;
@@ -90,10 +89,8 @@ namespace ConsoleApp1
 
                 if (openingBracketCount == 0)
                 {
-                    string bracketSubstring = expresion.Substring(entryPoint + 1, z - entryPoint - 2);
-
-                    // TODO calculate the bracketSubstring (it should return a value that can be used later)
-                    calc.Calculate(bracketSubstring);
+                    string bracketSubstring = expresion.Substring(entryPoint + 1, z - entryPoint - 1);
+                    OpperatorsAndNumbersList.Add(calc.Calculate(bracketSubstring));
                     PositionInString = z; 
                     break;
                 }

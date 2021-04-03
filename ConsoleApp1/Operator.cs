@@ -7,26 +7,40 @@ namespace ConsoleApp1
     public class Operator
     {
         //TODO check if syntax is correct
-        public void getResult(List<string> operatorsAndNumbers )
+        public string getResult(List<string> operatorsAndNumbers )
         {
             while (operatorsAndNumbers.Count > 1)
             {
                 PerformPrimaryOpperations(operatorsAndNumbers);
                 PerformSecondaryOpperations(operatorsAndNumbers);
-                
-           
-                string temp = "";
-                foreach (var numberOrOperator in operatorsAndNumbers)
-                {
-                    temp += numberOrOperator + " ";
-                }
-
-                Console.WriteLine("the current expression is: "+ temp);
-                
+                PerformTertiaryOpperations(operatorsAndNumbers);
             }
+
+            return operatorsAndNumbers[0];
         }
 
         private void PerformSecondaryOpperations(List<string> operatorsAndNumbers)
+        {
+            for (int i = 0; i < operatorsAndNumbers.Count; i++)
+            {
+                if (i == 0)
+                {
+                    if (operatorsAndNumbers[i] == "-")
+                    {
+                        changeListSpecial(i, Subtract( operatorsAndNumbers[i+1]), operatorsAndNumbers);
+                    }
+                }
+                else
+                {
+                    if (operatorsAndNumbers[i] == "-")
+                    {
+                        changeList(i, Subtract(operatorsAndNumbers[i+1], operatorsAndNumbers[i-1]), operatorsAndNumbers);
+                    }
+                }
+            }
+        }
+
+        private void PerformTertiaryOpperations(List<string> operatorsAndNumbers)
         {
             for (int i = 0; i < operatorsAndNumbers.Count; i++)
             {
@@ -36,20 +50,12 @@ namespace ConsoleApp1
                     {
                         changeListSpecial(i, Add( operatorsAndNumbers[i+1]), operatorsAndNumbers);
                     }
-                    else if (operatorsAndNumbers[i] == "-")
-                    {
-                        changeListSpecial(i, Subtract( operatorsAndNumbers[i+1]), operatorsAndNumbers);
-                    }
                 }
                 else
                 {
                     if (operatorsAndNumbers[i] == "+")
                     {
                         changeList(i, Add(operatorsAndNumbers[i+1], operatorsAndNumbers[i-1]), operatorsAndNumbers);
-                    }
-                    else if (operatorsAndNumbers[i] == "-")
-                    {
-                        changeList(i, Subtract(operatorsAndNumbers[i+1], operatorsAndNumbers[i-1]), operatorsAndNumbers);
                     }
                 }
             }
