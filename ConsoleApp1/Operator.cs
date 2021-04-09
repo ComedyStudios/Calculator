@@ -4,9 +4,9 @@ using System.Globalization;
 
 namespace ConsoleApp1
 {
+    //TODO make the Operator compatible with the new parser
     public class Operator
     {
-        //TODO check if syntax is correct
         public string getResult(List<string> operatorsAndNumbers )
         {
             while (operatorsAndNumbers.Count > 1)

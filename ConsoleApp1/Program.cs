@@ -12,9 +12,9 @@ namespace ConsoleApp1
             Calculator calc = new Calculator();
             var input = JsonInputOutputManager.ReadJson(JsonInputPath);
             var result = calc.Calculate(input);
-            JsonInputOutputManager.WriteJson(JsonOutputPath,result);
-            Console.WriteLine(input+" = "+ result);
-            Console.ReadLine();
+            //JsonInputOutputManager.WriteJson(JsonOutputPath,result);
+            //Console.WriteLine(input+" = "+ result);
+            //Console.ReadLine();
         }
     }
 }

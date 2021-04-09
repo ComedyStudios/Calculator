@@ -9,8 +9,19 @@ namespace ConsoleApp1
             Parser parser = new Parser();
             Operator op = new Operator();
             
+            
             var numbersAndOpreatorsList = parser.Parse(expresion);
-            return op.getResult(numbersAndOpreatorsList);
+            
+            
+            string temp = "";
+            foreach (var symbol in numbersAndOpreatorsList)
+            {
+                temp += symbol+ " ";
+            }
+            Console.WriteLine(temp);
+            
+            //return op.getResult(numbersAndOpreatorsList);
+            return "";
         }
     }
 }

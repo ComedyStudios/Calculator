@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 
 namespace ConsoleApp1
 {
@@ -8,37 +9,45 @@ namespace ConsoleApp1
     { 
         
         private string[] NumberCharArray = {"0","1","2","3","4","5","6","7","8","9","."}; 
-        private string[] OpperatorNameArray = {"+","-","*","/"};
-        private List<string> OpperatorsAndNumbersList = new List<string>(); 
-        
-        private Calculator calc  = new Calculator();
-        
+        private string[] OpperatorNameArray = {"+","-","*","/","("};
+        private List<string> NewExpression = new List<string>(); 
+        private List<string> Stack = new List<string>();
+        private string LastOperatorInStack;
+
         private int expressionLenght;
         private string substring; 
         private int PositionInString = 0;
         public List<string> Parse(string expresion)
         {
-            expressionLenght = expresion.Length; 
-            
+            expressionLenght = expresion.Length;
+
             for (; PositionInString < expressionLenght; PositionInString++)
             {
                 
                 substring = expresion.Substring(PositionInString, 1);
                 
-                if (substring == "(")
+                if (substring == ")")
                 {
-                    SearchAndCalculateBrackets(expresion, PositionInString);
+                    Console.WriteLine("bracket closing");
+                    RearrangeBrackets();
                 }
+                SearchForNumbers(expresion);
                 
-                searchForNumbers(expresion);
                 
-                GetOpperator(substring);
+                substring = expresion.Substring(PositionInString, 1);
+                
+                GetOperator(substring);
             }
 
-            return OpperatorsAndNumbersList; 
+            for (int temp = Stack.Count-1; temp >= 0; temp--)
+            {
+                NewExpression.Add(Stack[temp]);
+            }
+            
+            return NewExpression; 
         }
 
-        private void searchForNumbers(string expresion)
+        private void SearchForNumbers(string expresion)
         {
             foreach (var numberChar in NumberCharArray)
             {
@@ -63,50 +72,66 @@ namespace ConsoleApp1
                             break;
                         }
                     }
-
-                    OpperatorsAndNumbersList.Add(temp);
+                    PositionInString--;
+                    NewExpression.Add(temp);
                     break;
                 }
             }
         }
 
-        private void SearchAndCalculateBrackets(string expresion, int entryPoint)
+        private void RearrangeBrackets()
         {
-            int openingBracketCount = 0; 
-            var z = entryPoint;
-            for (; z < expresion.Length; z++)
+            for (int temp = Stack.Count-1;temp >= 0 ;temp--)
             {
-                var tempSubstring = expresion.Substring(z, 1);
-                if (tempSubstring == ")")
+                if (Stack[temp] == "(")
                 {
-                    openingBracketCount--;
-                   
-                }
-                else if(tempSubstring == "(")
-                {
-                    openingBracketCount++;
-                }
-
-                if (openingBracketCount == 0)
-                {
-                    string bracketSubstring = expresion.Substring(entryPoint + 1, z - entryPoint - 1);
-                    OpperatorsAndNumbersList.Add(calc.Calculate(bracketSubstring));
-                    PositionInString = z; 
+                    Stack.RemoveAt(temp);
+                    
+                    for (; temp < Stack.Count; temp++)
+                    {
+                        NewExpression.Add(Stack[temp]);
+                        Stack.RemoveAt(temp);
+                    }
                     break;
                 }
             }
             
         }
 
-        private void GetOpperator(string substring)
+        private void GetOperator(string substring)
         {
             foreach (var mathOperator in OpperatorNameArray)
             {
                 if (substring == mathOperator)
                 {
-                    OpperatorsAndNumbersList.Add(substring);
-                    break;
+                    if (OperatorHasSamePriorityAsLast(substring))
+                    {
+                        LastOperatorInStack = substring;
+                        NewExpression.Add(Stack[^1]);
+                        Stack.RemoveAt(Stack.Count-1);
+                        Stack.Add(substring);
+                        break;
+                    }
+                    else
+                    {
+                        LastOperatorInStack = substring;
+                        Stack.Add(substring);
+                        break;
+                    }
                 }
+            }
+        }
+
+        private bool OperatorHasSamePriorityAsLast(string operation)
+        {
+            if ( operation == "*" && LastOperatorInStack == "/"
+                ||operation == "/" && LastOperatorInStack == "*")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
