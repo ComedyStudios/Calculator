@@ -9,19 +9,16 @@ namespace ConsoleApp1
             Parser parser = new Parser();
             Operator op = new Operator();
             
-            
             var numbersAndOpreatorsList = parser.Parse(expresion);
-            
-            
-            string temp = "";
-            foreach (var symbol in numbersAndOpreatorsList)
+            if (numbersAndOpreatorsList.Count >= 3)
             {
-                temp += symbol+ " ";
+                return op.getResult(numbersAndOpreatorsList);
             }
-            Console.WriteLine(temp);
-            
-            //return op.getResult(numbersAndOpreatorsList);
-            return "";
+            else
+            {
+                Console.WriteLine("the Input has an incorrect expression");
+                return " ?";
+            }
         }
     }
 }

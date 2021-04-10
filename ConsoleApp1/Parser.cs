@@ -28,14 +28,12 @@ namespace ConsoleApp1
                 
                 if (substring == ")")
                 {
-                    Console.WriteLine("bracket closing");
                     RearrangeBrackets();
                 }
+                
                 SearchForNumbers(expresion);
-                
-                
+                // updating the substring
                 substring = expresion.Substring(PositionInString, 1);
-                
                 GetOperator(substring);
             }
 
@@ -125,7 +123,11 @@ namespace ConsoleApp1
         private bool OperatorHasSamePriorityAsLast(string operation)
         {
             if ( operation == "*" && LastOperatorInStack == "/"
-                ||operation == "/" && LastOperatorInStack == "*")
+                ||operation == "/" && LastOperatorInStack == "*"
+                ||operation == "-"&& LastOperatorInStack == "*"
+                ||operation == "-"&& LastOperatorInStack == "/"
+                ||operation == "+"&& LastOperatorInStack == "*"
+                ||operation == "+"&& LastOperatorInStack == "/")
             {
                 return true;
             }

@@ -10,11 +10,16 @@ namespace ConsoleApp1
         static void Main()
         {
             Calculator calc = new Calculator();
+            
             var input = JsonInputOutputManager.ReadJson(JsonInputPath);
-            var result = calc.Calculate(input);
-            //JsonInputOutputManager.WriteJson(JsonOutputPath,result);
-            //Console.WriteLine(input+" = "+ result);
-            //Console.ReadLine();
+            if (input != null)
+            {
+                var result = calc.Calculate(input);
+                JsonInputOutputManager.WriteJson(JsonOutputPath,result);
+                Console.WriteLine(input+" = "+ result);
+                Console.ReadLine();
+            }
+            else Console.WriteLine("the Input is Empty");
         }
     }
 }
