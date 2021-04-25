@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{0B17C71E-6955-4433-AEDD-77306A399709}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculator", "Calculator\Calculator.csproj", "{0B17C71E-6955-4433-AEDD-77306A399709}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
