@@ -4,14 +4,14 @@ namespace ConsoleApp1
 {
     class Program
     {
-        private static string JsonInputPath = "../../resources/Input.json";
-        private static string JsonOutputPath = "../../resources/Output.json";
+        private static string JsonInputPath = "../../resources/Input.txt";
+        private static string JsonOutputPath = "../../resources/Output.txt";
         private static JsonInputOutput JsonInputOutputManager = new JsonInputOutput();
         static void Main()
         {
             Calculator calc = new Calculator();
             
-            var input = JsonInputOutputManager.ReadJson(JsonInputPath);
+            var input = JsonInputOutputManager.ReadText(JsonInputPath);
             if (input != null)
             {
                 var result = calc.Calculate(input);
