@@ -13,6 +13,7 @@ namespace ConsoleApp1
 
         internal void WriteJson(string path, string value)
         {
+            //TODO create output file if it doesnt exist yet
             File.WriteAllText(path, value);
         }
         

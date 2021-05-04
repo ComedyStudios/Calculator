@@ -6,4 +6,13 @@
         <RootNamespace>ConsoleApp1</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <None Update="resources\Input.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="resources\Output.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>
