@@ -8,7 +8,7 @@
 
     <ItemGroup>
       <None Update="resources\Input.txt">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="resources\Output.txt">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

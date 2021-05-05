@@ -2,40 +2,60 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Linq;
 
 namespace ConsoleApp1
 {
     public class Parser
     {
         private string[] NumberCharArray = {"0","1","2","3","4","5","6","7","8","9","."}; 
-        private string[] OpperatorNameArray = {"+","-","*","/","("};
+        private string[] OpperatorArray = {"+","-","*","/"};
+        private string[] PriorityOperator = {"(", ")"};
         private List<string> NewExpression = new List<string>(); 
         private List<string> Stack = new List<string>();
+        
         private string LastOperatorInStack;
-
         private int expressionLenght;
-        private string substring; 
-        private int PositionInString = 0;
+        private int PositionInString;
+        
+        /// Types of possible inputs:
+        /// operator
+        /// number
+        /// bracket
+        ///
+        /// Make an issue if:
+        /// Stack isn't empty: invalid syntax
+        /// number ends with a letter: 1231a
+        /// no operator between numbers: 12 13
+        /// semicolon: 7,7 instead of 7.7
+        /// operator isnt surounded by numbers
+        
         public List<string> Parse(string expresion)
         {
             expressionLenght = expresion.Length;
-
+            
+            //TODO Change from substring to char Array
+            //use Char.isNumber or similar function
+            
+            //building the stack and the expression
             for (; PositionInString < expressionLenght; PositionInString++)
             {
-                
-                substring = expresion.Substring(PositionInString, 1);
-                
-                if (substring == ")")
+                var substring = expresion.Substring(PositionInString, 1);
+                if (SymbolIsNumber(substring))
                 {
-                    RearrangeBrackets();
+                    AddFullNumberToExpression(expresion);
                 }
-                
-                SearchForNumbers(expresion);
-                // updating the substring
-                substring = expresion.Substring(PositionInString, 1);
-                GetOperator(substring);
+                else if (SymbolIsOperator(substring))
+                {
+                    AddOperatorToStackOrExpression(substring);
+                }
+                else if (SymbolIsBracket(substring))
+                {
+                    ManageBrackets(substring);
+                }
             }
 
+            //moving the stack into the expresion
             for (int temp = Stack.Count-1; temp >= 0; temp--)
             {
                 NewExpression.Add(Stack[temp]);
@@ -44,60 +64,32 @@ namespace ConsoleApp1
             return NewExpression; 
         }
 
-        private void SearchForNumbers(string expresion)
+        private void AddFullNumberToExpression(string expresion)
         {
-            foreach (var numberChar in NumberCharArray)
+            string temp = "";
+            for (; PositionInString < expresion.Length; PositionInString++)
             {
-                if (numberChar == substring)
+                var symbol = expresion.Substring(PositionInString, 1);
+                foreach (var secondNumberChar in NumberCharArray)
                 {
-                    PositionInString++;
-                    string temp = substring;
-                    for (; PositionInString < expressionLenght; PositionInString++)
+                    if (symbol == secondNumberChar)
                     {
-                        substring = expresion.Substring(PositionInString, 1);
-                        foreach (var secondNumberChar in NumberCharArray)
-                        {
-                            if (substring == secondNumberChar)
-                            {
-                                temp += substring;
-                                break;
-                            }
-                        }
-
-                        if (CharIsNotNumber(substring))
-                        {
-                            break;
-                        }
+                        temp += symbol;
+                        break;
                     }
+                }
+
+                if (!SymbolIsNumber(symbol))
+                {
                     PositionInString--;
-                    NewExpression.Add(temp);
                     break;
                 }
             }
+            NewExpression.Add(temp);
         }
-
-        private void RearrangeBrackets()
+        private void AddOperatorToStackOrExpression(string substring)
         {
-            for (int temp = Stack.Count-1;temp >= 0 ;temp--)
-            {
-                if (Stack[temp] == "(")
-                {
-                    Stack.RemoveAt(temp);
-                    
-                    for (; temp < Stack.Count; temp++)
-                    {
-                        NewExpression.Add(Stack[temp]);
-                        Stack.RemoveAt(temp);
-                    }
-                    break;
-                }
-            }
-            
-        }
-
-        private void GetOperator(string substring)
-        {
-            foreach (var mathOperator in OpperatorNameArray)
+            foreach (var mathOperator in OpperatorArray)
             {
                 if (substring == mathOperator)
                 {
@@ -118,15 +110,39 @@ namespace ConsoleApp1
                 }
             }
         }
-
+        private void ManageBrackets(string substring)
+        {
+            if (substring == "(")
+            {
+                Stack.Add("(");
+            }
+            else
+            {
+                for (int temp = Stack.Count-1;temp >= 0 ;temp--)
+                {
+                    if (Stack[temp] == "(")
+                    {
+                        Stack.RemoveAt(temp);
+                    
+                        for (; temp < Stack.Count; temp++)
+                        {
+                            NewExpression.Add(Stack[temp]);
+                            Stack.RemoveAt(temp);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        
         private bool OperatorHasSamePriorityAsLast(string operation)
         {
-            if ( operation == "*" && LastOperatorInStack == "/"
+            if (  operation == "*" && LastOperatorInStack == "/"
                 ||operation == "/" && LastOperatorInStack == "*"
-                ||operation == "-"&& LastOperatorInStack == "*"
-                ||operation == "-"&& LastOperatorInStack == "/"
-                ||operation == "+"&& LastOperatorInStack == "*"
-                ||operation == "+"&& LastOperatorInStack == "/")
+                ||operation == "-" && LastOperatorInStack == "*"
+                ||operation == "-" && LastOperatorInStack == "/"
+                ||operation == "+" && LastOperatorInStack == "*"
+                ||operation == "+" && LastOperatorInStack == "/") 
             {
                 return true;
             }
@@ -135,17 +151,42 @@ namespace ConsoleApp1
                 return false;
             }
         }
-
-        private bool CharIsNotNumber(string susbt)
+        private bool SymbolIsNumber(string symbol)
         {
-            foreach (var numberChar in NumberCharArray)
+            foreach (var number in NumberCharArray)
             {
-                if (susbt == numberChar)
+                if (number == symbol)
                 {
-                    return false;
+                    return true;
                 }
             }
-            return true; 
+
+            return false;
         }
+        private bool SymbolIsOperator(string symbol)
+        {
+            foreach (var mathOperaor in OpperatorArray)
+            {
+                if (mathOperaor == symbol)
+                {
+                    return true; 
+                }
+            }
+
+            return false;
+        }
+
+        private bool SymbolIsBracket(string symbol)
+        {
+            foreach (var bracket in PriorityOperator)
+            {
+                if (symbol == bracket)
+                {
+                    return true;
+                }
+            }
+
+            return false; 
         }
     }
+}

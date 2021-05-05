@@ -4,7 +4,6 @@ namespace ConsoleApp1
 {
     public class JsonInputOutput
     {
-
         internal string ReadText(string path)
         {
             string InputString = File.ReadAllText(path); 

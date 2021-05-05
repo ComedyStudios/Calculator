@@ -19,6 +19,7 @@ namespace ConsoleApp1
                 Console.WriteLine("the Input has an incorrect expression");
                 return " ?";
             }
+            //return "Calculator: the operator is deactivated";
         }
     }
 }
