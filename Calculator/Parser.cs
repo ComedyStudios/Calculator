@@ -13,6 +13,7 @@ namespace ConsoleApp1
         private string[] PriorityOperator = {"(", ")"};
         private List<string> NewExpression = new List<string>(); 
         private List<string> Stack = new List<string>();
+        private string Error;
         
         private string LastOperatorInStack;
         private int expressionLenght;
@@ -40,6 +41,14 @@ namespace ConsoleApp1
             //building the stack and the expression
             for (; PositionInString < expressionLenght; PositionInString++)
             {
+                if (Error != null)
+                {
+                    NewExpression.Clear();
+                    NewExpression.Add("Error");
+                    NewExpression.Add(Error);
+                    return NewExpression;
+                }
+                
                 var substring = expresion.Substring(PositionInString, 1);
                 if (SymbolIsNumber(substring))
                 {
@@ -53,6 +62,7 @@ namespace ConsoleApp1
                 {
                     ManageBrackets(substring);
                 }
+                //CreateError("test");
             }
 
             //moving the stack into the expresion
@@ -187,6 +197,11 @@ namespace ConsoleApp1
             }
 
             return false; 
+        }
+
+        private void CreateError(string Error)
+        {
+            this.Error = Error;
         }
     }
 }

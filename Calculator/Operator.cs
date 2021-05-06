@@ -7,8 +7,15 @@ namespace ConsoleApp1
     //TODO make the Operator compatible with the new parser
     public class Operator
     {
+        private string Error;
+        
+        
         public string getResult(List<string> operatorsAndNumbers)
         {
+            if (Error != null)
+            {
+                return Error;
+            }
             while (operatorsAndNumbers.Count > 1)
             {
                 PerformOpperations(operatorsAndNumbers);
@@ -51,5 +58,6 @@ namespace ConsoleApp1
             operatorsAndNumbersList.RemoveAt(index - 1);
             operatorsAndNumbersList.RemoveAt(index - 2);
         }
+        
     }
 }

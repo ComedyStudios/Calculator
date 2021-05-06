@@ -10,14 +10,14 @@ namespace ConsoleApp1
             Operator op = new Operator();
             
             var numbersAndOpreatorsList = parser.Parse(expresion);
-            if (numbersAndOpreatorsList.Count >= 3)
+
+            if (numbersAndOpreatorsList[0] == "Error")
             {
-                return op.getResult(numbersAndOpreatorsList);
+                return "The expression contains the following error:" + numbersAndOpreatorsList[1];
             }
             else
             {
-                Console.WriteLine("the Input has an incorrect expression");
-                return " ?";
+                return op.getResult(numbersAndOpreatorsList);
             }
             //return "Calculator: the operator is deactivated";
         }
