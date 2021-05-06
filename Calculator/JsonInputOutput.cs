@@ -1,12 +1,14 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace ConsoleApp1
 {
     public class JsonInputOutput
     {
-        internal string ReadText(string path)
+        internal List<string> ReadText(string path)
         {
-            string InputString = File.ReadAllText(path); 
+            var InputString = File.ReadLines(path).ToList(); 
             return InputString; 
         }
 

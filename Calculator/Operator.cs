@@ -7,12 +7,10 @@ namespace ConsoleApp1
     //TODO make the Operator compatible with the new parser
     public class Operator
     {
-        private string Error;
-        
-        
+        private string Error = "";
         public string getResult(List<string> operatorsAndNumbers)
         {
-            if (Error != null)
+            if (Error != "")
             {
                 return Error;
             }

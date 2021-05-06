@@ -12,14 +12,18 @@ namespace ConsoleApp1
             Calculator calc = new Calculator();
             
             var input = JsonInputOutputManager.ReadText(JsonInputPath);
-            if (input != null)
+
+            foreach (var line in input)
             {
-                var result = calc.Calculate(input);
-                JsonInputOutputManager.WriteJson(JsonOutputPath,result);
-                Console.WriteLine(input+" = "+ result);
-                Console.ReadLine();
+                if (line != null)
+                {
+                    var result = calc.Calculate(line);
+                    JsonInputOutputManager.WriteJson(JsonOutputPath,result);
+                    Console.WriteLine(line+" = "+ result);
+                }
+                else Console.WriteLine("the Input is Empty");
             }
-            else Console.WriteLine("the Input is Empty");
+            Console.ReadLine();
         }
     }
 }
