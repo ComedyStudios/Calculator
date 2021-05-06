@@ -44,5 +44,3 @@ b=6
 a*6/b
 a*6/c
 */
-
-//TODO read each line as new expression 

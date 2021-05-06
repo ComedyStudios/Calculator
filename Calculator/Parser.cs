@@ -8,15 +8,13 @@ namespace ConsoleApp1
 {
     public class Parser
     {
-        private string[] NumberCharArray = {"0","1","2","3","4","5","6","7","8","9","."}; 
-        private string[] OpperatorArray = {"+","-","*","/"};
-        private string[] PriorityOperator = {"(", ")"};
+        private char[] OpperatorArray = {'+','-','*','/'};
+        private char[] PriorityOperator = {'(', ')'};
         private List<string> NewExpression = new List<string>(); 
-        private List<string> Stack = new List<string>();
+        private List<char> Stack = new List<char>();
         private string Error;
         
-        private string LastOperatorInStack;
-        private int expressionLenght;
+        private char LastOperatorInStack;
         private int PositionInString;
         
         /// Types of possible inputs:
@@ -33,13 +31,11 @@ namespace ConsoleApp1
         
         public List<string> Parse(string expresion)
         {
-            expressionLenght = expresion.Length;
+            char[] charArray = expresion.ToCharArray();
             
-            //TODO Change from substring to char Array
-            //use Char.isNumber or similar function
             
             //building the stack and the expression
-            for (; PositionInString < expressionLenght; PositionInString++)
+            for (; PositionInString < charArray.Length; PositionInString++)
             {
                 if (Error != null)
                 {
@@ -48,19 +44,19 @@ namespace ConsoleApp1
                     NewExpression.Add(Error);
                     return NewExpression;
                 }
-                
-                var substring = expresion.Substring(PositionInString, 1);
-                if (SymbolIsNumber(substring))
+
+                var symbol = charArray[PositionInString];
+                if (Char.IsDigit(symbol)||symbol == '.' )
                 {
-                    AddFullNumberToExpression(expresion);
+                    AddFullNumberToExpression(charArray);
                 }
-                else if (SymbolIsOperator(substring))
+                else if (SymbolIsOperator(symbol))
                 {
-                    AddOperatorToStackOrExpression(substring);
+                    AddOperatorToStackOrExpression(symbol);
                 }
-                else if (SymbolIsBracket(substring))
+                else if (SymbolIsBracket(symbol))
                 {
-                    ManageBrackets(substring);
+                    ManageBrackets(symbol);
                 }
                 //CreateError("test");
             }
@@ -68,28 +64,24 @@ namespace ConsoleApp1
             //moving the stack into the expresion
             for (int temp = Stack.Count-1; temp >= 0; temp--)
             {
-                NewExpression.Add(Stack[temp]);
+                NewExpression.Add(Stack[temp].ToString());
             }
             
             return NewExpression; 
         }
 
-        private void AddFullNumberToExpression(string expresion)
+        private void AddFullNumberToExpression(char[] expresion)
         {
             string temp = "";
             for (; PositionInString < expresion.Length; PositionInString++)
             {
-                var symbol = expresion.Substring(PositionInString, 1);
-                foreach (var secondNumberChar in NumberCharArray)
+                char symbol = expresion[PositionInString];
+                if (Char.IsDigit(symbol)|| symbol == '.')
                 {
-                    if (symbol == secondNumberChar)
-                    {
                         temp += symbol;
-                        break;
-                    }
                 }
 
-                if (!SymbolIsNumber(symbol))
+                if (!Char.IsDigit(symbol) && symbol != '.')
                 {
                     PositionInString--;
                     break;
@@ -97,7 +89,7 @@ namespace ConsoleApp1
             }
             NewExpression.Add(temp);
         }
-        private void AddOperatorToStackOrExpression(string substring)
+        private void AddOperatorToStackOrExpression(char substring)
         {
             foreach (var mathOperator in OpperatorArray)
             {
@@ -106,7 +98,7 @@ namespace ConsoleApp1
                     if (OperatorHasSamePriorityAsLast(substring))
                     {
                         LastOperatorInStack = substring;
-                        NewExpression.Add(Stack[^1]);
+                        NewExpression.Add(Stack[^1].ToString());
                         Stack.RemoveAt(Stack.Count-1);
                         Stack.Add(substring);
                         break;
@@ -120,23 +112,23 @@ namespace ConsoleApp1
                 }
             }
         }
-        private void ManageBrackets(string substring)
+        private void ManageBrackets(char substring)
         {
-            if (substring == "(")
+            if (substring == '(')
             {
-                Stack.Add("(");
+                Stack.Add('(');
             }
             else
             {
                 for (int temp = Stack.Count-1;temp >= 0 ;temp--)
                 {
-                    if (Stack[temp] == "(")
+                    if (Stack[temp] == '(')
                     {
                         Stack.RemoveAt(temp);
                     
                         for (; temp < Stack.Count; temp++)
                         {
-                            NewExpression.Add(Stack[temp]);
+                            NewExpression.Add(Stack[temp].ToString());
                             Stack.RemoveAt(temp);
                         }
                         break;
@@ -145,14 +137,14 @@ namespace ConsoleApp1
             }
         }
         
-        private bool OperatorHasSamePriorityAsLast(string operation)
+        private bool OperatorHasSamePriorityAsLast(char operation)
         {
-            if (  operation == "*" && LastOperatorInStack == "/"
-                ||operation == "/" && LastOperatorInStack == "*"
-                ||operation == "-" && LastOperatorInStack == "*"
-                ||operation == "-" && LastOperatorInStack == "/"
-                ||operation == "+" && LastOperatorInStack == "*"
-                ||operation == "+" && LastOperatorInStack == "/") 
+            if (  operation == '*' && LastOperatorInStack == '/'
+                ||operation == '/' && LastOperatorInStack == '*'
+                ||operation == '-' && LastOperatorInStack == '*'
+                ||operation == '-' && LastOperatorInStack == '/'
+                ||operation == '+' && LastOperatorInStack == '*'
+                ||operation == '+' && LastOperatorInStack == '/') 
             {
                 return true;
             }
@@ -161,19 +153,7 @@ namespace ConsoleApp1
                 return false;
             }
         }
-        private bool SymbolIsNumber(string symbol)
-        {
-            foreach (var number in NumberCharArray)
-            {
-                if (number == symbol)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-        private bool SymbolIsOperator(string symbol)
+        private bool SymbolIsOperator(char symbol)
         {
             foreach (var mathOperaor in OpperatorArray)
             {
@@ -186,7 +166,7 @@ namespace ConsoleApp1
             return false;
         }
 
-        private bool SymbolIsBracket(string symbol)
+        private bool SymbolIsBracket(char symbol)
         {
             foreach (var bracket in PriorityOperator)
             {

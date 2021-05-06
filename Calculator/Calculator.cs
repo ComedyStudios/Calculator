@@ -9,15 +9,15 @@ namespace ConsoleApp1
             Parser parser = new Parser();
             Operator op = new Operator();
             
-            var numbersAndOpreatorsList = parser.Parse(expresion);
+            var numbersAndOperatorsList = parser.Parse(expresion);
 
-            if (numbersAndOpreatorsList[0] == "Error")
+            if (numbersAndOperatorsList[0] == "Error")
             {
-                return "The expression contains the following error:" + numbersAndOpreatorsList[1];
+                return "The expression contains the following error:" + numbersAndOperatorsList[1];
             }
             else
             {
-                return op.getResult(numbersAndOpreatorsList);
+                return op.getResult(numbersAndOperatorsList);
             }
             //return "Calculator: the operator is deactivated";
         }
