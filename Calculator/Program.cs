@@ -13,16 +13,21 @@ namespace ConsoleApp1
             
             var input = JsonInputOutputManager.ReadText(JsonInputPath);
 
+            string AllResults = "";
+
             foreach (var line in input)
             {
                 if (line != null)
                 {
                     var result = calc.Calculate(line);
-                    JsonInputOutputManager.WriteJson(JsonOutputPath,result);
+                    
+                    AllResults += result + "\n";
                     Console.WriteLine(line+" = "+ result);
                 }
                 else Console.WriteLine("the Input is Empty");
             }
+            
+            JsonInputOutputManager.WriteJson(JsonOutputPath,AllResults);
             Console.ReadLine();
         }
     }
